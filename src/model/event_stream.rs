@@ -6,7 +6,7 @@ use std::marker::PhantomData;
 use std::pin::Pin;
 
 use crc32fast::Hasher;
-use futures::task::{Context, Poll};
+use async_std::task::{Context, Poll};
 use rusoto_core::event_stream::DeserializeEvent;
 use rusoto_core::{RusotoError};
 
@@ -257,7 +257,7 @@ impl<T: DeserializeEvent + Unpin> EventStream<T> {
                 Err(EventStreamParseError::UnexpectedEof) => return Ok(None),
                 Err(err) => return Err(err.into()),
             };
-            //slog::trace!("Parsed event stream event: {:?}", event_msg);
+            log::trace!("Parsed event stream event: {:?}", event_msg);
 
             let event_type_header = event_msg
                 .get_header(":event-type")
@@ -318,7 +318,7 @@ impl<T: DeserializeEvent + Unpin> async_std::stream::Stream for EventStream<T> {
         match projection.response_body.as_mut() {
             // We received an http body chunk
             Some(byte_chunk) => {
-                //slog::trace!("Got event stream bytes: {:?}", byte_chunk);
+                log::trace!("Got event stream bytes: {:?}", byte_chunk);
 
                 projection.buf.append(byte_chunk);
 

@@ -1,22 +1,19 @@
 extern crate rusoto_core;
 extern crate serde;
 extern crate serde_json;
-extern crate quick_xml;
 
 use std::collections::BTreeMap;
 use std::time::Duration;
 
-use model::select_object_content::SelectObjectContentRequest;
 use rusoto_core::Region;
 use rusoto_core::credential::{Anonymous, CredentialsError};
 use rusoto_core::encoding::ContentEncoding;
 use rusoto_core::param::ServiceParams;
 use rusoto_core::{credential::ProvideAwsCredentials, signature::SignedRequest};
+use rusoto_s3::{SelectObjectContentRequest, SelectObjectContentRequestSerializer};
 use surf::http::Method;
 use surf::{RequestBuilder, Url};
 use xml::EventWriter;
-
-use crate::model::select_object_content::SelectObjectContentRequestSerializer;
 
 pub type Params = BTreeMap<String, Option<String>>;
 
@@ -57,11 +54,11 @@ pub async fn select_object_content(hostname: String,
 
     let mut writer = EventWriter::new(Vec::new());
     SelectObjectContentRequestSerializer::serialize(
-            &mut writer,
-            "SelectObjectContentRequest",
-            &select_object_content_request,
-            "http://s3.amazonaws.com/doc/2006-03-01/",
-        ).unwrap();
+        &mut writer,
+        "SelectObjectContentRequest",
+        &select_object_content_request,
+        "http://s3.amazonaws.com/doc/2006-03-01/",
+    )?;
 
     let paylaod = writer.into_inner();
 
@@ -102,9 +99,9 @@ pub async fn select_object_content(hostname: String,
     let mut map = serde_json::Map::default();
     map.insert("select".to_string(), serde_json::Value::String("".to_string()));
     map.insert("select-type".to_string(), serde_json::Value::String("2".to_string()));
+    
     let query = serde_json::Value::Object(map);
-    request_builder = request_builder.query(&query).unwrap();
-
+    request_builder = request_builder.query(&query)?;
     request_builder = request_builder.body(paylaod);
 
     Ok(request_builder)

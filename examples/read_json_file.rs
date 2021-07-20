@@ -1,7 +1,7 @@
 use surf_bucket_select::model::{event_stream::EventStream, select_object_content::SelectObjectContentEventStreamItem};
 use futures::TryStreamExt;
 use rusoto_s3::{
-    CSVInput, InputSerialization, JSONOutput, OutputSerialization,
+    JSONInput, InputSerialization, JSONOutput, OutputSerialization,
     SelectObjectContentRequest,
 };
 use std::io;
@@ -11,9 +11,8 @@ async fn main() -> io::Result<()> {
     let client = surf::client();
 
     let input_serialization = InputSerialization {
-        csv: Some(CSVInput {
-            file_header_info: Some("USE".to_string()),
-            ..Default::default()
+        json: Some(JSONInput {
+            type_: Some("DOCUMENT".to_string())
         }),
         ..Default::default()
     };
@@ -27,8 +26,8 @@ async fn main() -> io::Result<()> {
 
     let select_object_content_request = SelectObjectContentRequest {
         bucket: "my-bucket".to_owned(),
-        key: "data/multi_lines.csv".to_owned(),
-        expression: "select * from s3object where number = 20".to_owned(),
+        key: "data/multi_lines.json".to_owned(),
+        expression: "select * from s3object[*].results[*] r where r.number = 20".to_owned(),
         expression_type: "SQL".to_owned(),
         input_serialization,
         output_serialization,
