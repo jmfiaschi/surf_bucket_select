@@ -1813,18 +1813,16 @@ dependencies = [
 
 [[package]]
 name = "surf_bucket_select"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-std",
  "async-trait",
  "crc32fast",
  "futures",
- "http",
  "log",
  "rusoto_core",
  "rusoto_s3",
  "serde",
- "serde_json",
  "surf",
  "xml-rs",
 ]

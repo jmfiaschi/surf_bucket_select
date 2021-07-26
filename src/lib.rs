@@ -1,6 +1,5 @@
 extern crate rusoto_core;
 extern crate serde;
-extern crate serde_json;
 
 use std::collections::BTreeMap;
 use std::time::Duration;
@@ -14,10 +13,18 @@ use rusoto_s3::{SelectObjectContentRequest, SelectObjectContentRequestSerializer
 use surf::http::Method;
 use surf::{RequestBuilder, Url};
 use xml::EventWriter;
+use serde::{Serialize, Deserialize};
 
 pub type Params = BTreeMap<String, Option<String>>;
 
 pub mod model;
+
+#[derive(Serialize, Deserialize)]
+struct QueryParam {
+    select: String,
+    #[serde(rename = "select-type")]
+    select_type: u32
+}
 
 pub async fn select_object_content(hostname: String, 
         select_object_content_request: SelectObjectContentRequest,
@@ -96,11 +103,10 @@ pub async fn select_object_content(hostname: String,
         request_builder = request_builder.header(key.clone().as_str(), canonical_values(value));
     }
 
-    let mut map = serde_json::Map::default();
-    map.insert("select".to_string(), serde_json::Value::String("".to_string()));
-    map.insert("select-type".to_string(), serde_json::Value::String("2".to_string()));
-    
-    let query = serde_json::Value::Object(map);
+    let query = QueryParam {
+        select: "".to_string(),
+        select_type: 2
+    };
     request_builder = request_builder.query(&query)?;
     request_builder = request_builder.body(paylaod);
 
