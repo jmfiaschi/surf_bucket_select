@@ -8,7 +8,7 @@ use std::pin::Pin;
 use crc32fast::Hasher;
 use async_std::task::{Context, Poll};
 use rusoto_core::event_stream::DeserializeEvent;
-use rusoto_core::{RusotoError};
+use rusoto_core::RusotoError;
 
 #[derive(Debug, Eq, PartialEq)]
 enum EventStreamParseError {

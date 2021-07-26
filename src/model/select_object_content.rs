@@ -55,7 +55,7 @@ impl DeserializeEvent for SelectObjectContentEventStreamItem {
                 let mut stack = XmlResponse::new(reader.into_iter().peekable());
                 find_start_element(&mut stack);
                 SelectObjectContentEventStreamItem::Stats(StatsEvent {
-                    details: Some(StatsDeserializer::deserialize("Details", &mut stack)?),
+                    details: Some(StatsDeserializer::deserialize("Stats", &mut stack)?),
                 })
             }
             _ => Err(RusotoError::ParseError(format!(

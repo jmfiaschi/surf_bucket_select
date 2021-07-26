@@ -85,15 +85,16 @@ async fn main() -> io::Result<()> {
     while let Ok(Some(item)) = event_stream.try_next().await {
         match item {
             SelectObjectContentEventStreamItem::Records(records_event) => {
-                data = String::from_utf8(
+                data.push_str(String::from_utf8(
                     records_event
                         .payload
                         .expect("Failed to return the event payload")
                         .slice(0..)
                         .to_vec(),
                 )
-                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
-            }
+                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?.as_str());
+            },
+            SelectObjectContentEventStreamItem::End(_end_event) => break,
             _ => {}
         }
     }
