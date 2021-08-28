@@ -10,7 +10,6 @@ use rusoto_core::encoding::ContentEncoding;
 use rusoto_core::param::ServiceParams;
 use rusoto_core::{credential::ProvideAwsCredentials, signature::SignedRequest};
 use rusoto_s3::{SelectObjectContentRequest, SelectObjectContentRequestSerializer};
-use surf::http::Method;
 use surf::{RequestBuilder, Url};
 use xml::EventWriter;
 use serde::{Serialize, Deserialize};
