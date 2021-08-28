@@ -7,14 +7,16 @@ export $(shell sed 's/=.*//' .env)
 help: ## Display all commands.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+start: minio minio-install
+
 minio:
 	echo "${BLUE}Run Minio server.${NC}"
 	echo "${YELLOW}Host: http://localhost:9000 | Credentials: ${BUCKET_ACCESS_KEY_ID}/${BUCKET_SECRET_ACCESS_KEY} ${NC}"
-	@docker-compose up -d minio
+	@docker-compose up -d minio1 minio2 minio3 minio4 nginx
 
 minio-install:
 	echo "${BLUE}Configure Minio server.${NC}"
-	@docker-compose run --rm mc config host add s3 http://minio:9000 ${BUCKET_ACCESS_KEY_ID} ${BUCKET_SECRET_ACCESS_KEY} --api s3v4
+	@docker-compose run --rm mc config host add s3 http://nginx:9000 ${BUCKET_ACCESS_KEY_ID} ${BUCKET_SECRET_ACCESS_KEY} --api s3v4
 	@docker-compose run --rm mc mb -p s3/my-bucket
 	@docker-compose run --rm mc cp -r /root/data s3/my-bucket
 
