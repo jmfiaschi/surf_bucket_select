@@ -39,7 +39,7 @@ pub async fn select_object_content(hostname: String,
     };
 
     let mut signed_request = SignedRequest::new("POST", "s3", &region, uri.path());
-    //signed_request.set_hostname(self.url().host_str().map(|str| str.to_string()));
+    
     signed_request.add_optional_header(
         "x-amz-server-side-encryption-customer-algorithm",
         select_object_content_request
@@ -70,6 +70,7 @@ pub async fn select_object_content(hostname: String,
     let paylaod = writer.into_inner();
 
     signed_request.set_payload(Some(paylaod.clone()));
+    signed_request.set_content_type("application/xml; charset=utf-8".to_string());
 
     let encoding = ContentEncoding::default();
     encoding.encode(&mut signed_request);
@@ -97,7 +98,7 @@ pub async fn select_object_content(hostname: String,
         signed_request.complement();
     }
 
-    let mut request_builder = RequestBuilder::new(Method::Post, uri);
+    let mut request_builder = surf::post(uri);
 
     for (key, value) in signed_request.headers() {
         request_builder = request_builder.header(key.clone().as_str(), canonical_values(value));

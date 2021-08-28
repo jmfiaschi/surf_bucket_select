@@ -1,7 +1,6 @@
 use futures::TryStreamExt;
 use rusoto_s3::{
-    InputSerialization, JSONInput, JSONOutput, OutputSerialization,
-    SelectObjectContentRequest,
+    InputSerialization, JSONInput, JSONOutput, OutputSerialization, SelectObjectContentRequest,
 };
 use std::io;
 use surf_bucket_select::model::{
@@ -80,7 +79,10 @@ async fn main() -> io::Result<()> {
     }
 
     if body_bytes.is_empty() {
-        return Err(io::Error::new(io::ErrorKind::ConnectionAborted, "The response body is empty or surf can't read the body."))
+        return Err(io::Error::new(
+            io::ErrorKind::ConnectionAborted,
+            "The response body is empty or surf can't read the body.",
+        ));
     }
 
     let mut event_stream =

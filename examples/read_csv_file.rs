@@ -54,7 +54,7 @@ async fn main() -> io::Result<()> {
     )
     .await
     .map_err(|e| io::Error::new(io::ErrorKind::Interrupted, e))?;
-
+    
     let req = request_builder.build();
 
     let mut res = client
