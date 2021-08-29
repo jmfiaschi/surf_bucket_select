@@ -10,6 +10,7 @@ use rusoto_core::encoding::ContentEncoding;
 use rusoto_core::param::ServiceParams;
 use rusoto_core::{credential::ProvideAwsCredentials, signature::SignedRequest};
 use rusoto_s3::{SelectObjectContentRequest, SelectObjectContentRequestSerializer};
+use surf::http::Method;
 use surf::{RequestBuilder, Url};
 use xml::EventWriter;
 use serde::{Serialize, Deserialize};
@@ -97,7 +98,7 @@ pub async fn select_object_content(hostname: String,
         signed_request.complement();
     }
 
-    let mut request_builder = surf::post(uri);
+    let mut request_builder = RequestBuilder::new(Method::Post, uri);
 
     for (key, value) in signed_request.headers() {
         request_builder = request_builder.header(key.clone().as_str(), canonical_values(value));
