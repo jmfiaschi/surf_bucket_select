@@ -6,7 +6,7 @@ A temporary project to use bucket select with surf. Actualy, Rusoto is under mig
 
  ```Toml
 [dependencies]
-surf_bucket_select = "0.1"
+surf_bucket_select = "0.2.2"
 ```
 
 ## Usage
